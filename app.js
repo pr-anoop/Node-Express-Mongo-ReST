@@ -1,3 +1,6 @@
+// =======================
+// get the packages we need
+// =======================
 var express = require('express'),
 	fs = require('fs'),
 	mongoose = require('mongoose'),
@@ -5,12 +8,19 @@ var express = require('express'),
 	nconf = require('./middleware/config'),
 	xdom = require('./middleware/crossdomain');
 
+// =======================
+// configuration
+// =======================
 var app = express();
+
+// use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(xdom);
+app.disable('x-powered-by');
+app.enable('trust proxy');
 
-
+// Database connection
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function(err) {
   if (err) {
@@ -21,7 +31,9 @@ mongoose.connection.once('open', function(err) {
 
 mongoose.connect('mongodb://' + nconf.get('mongodb:host') + '/' + nconf.get('mongodb:db'));
 
-
+// =======================
+// routes
+// =======================
 var routesPrefix = __dirname + '/routes/';
 var files = fs.readdirSync(routesPrefix);
 
@@ -41,6 +53,9 @@ app.get('*', function(req, res){
 	});
 });
 
+// =======================
+// start the server 
+// =======================
 var server = app.listen(nconf.get('port'), function() {
   console.log('server up on %d', nconf.get('port'));
 });

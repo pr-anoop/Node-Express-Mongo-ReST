@@ -9,7 +9,7 @@ var routes = function(){
     	.post(controller.create)
     	.get(controller.list);
 
-    userRouter.use('/:id', controller.middleware);
+    userRouter.use('/:id', controller.userById);
 
     userRouter.route('/:id')
     	.put(controller.update)

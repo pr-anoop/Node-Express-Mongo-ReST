@@ -13,9 +13,9 @@ gulp.task('default', function(){
     });
 });
 
-gulp.task('apidoc', function(){
+gulp.task('docs', function(){
 	apidoc.exec({
 		src: "controllers/",
-		dest: "doc/"
+		dest: "docs/"
 	});
 });

@@ -2,6 +2,6 @@
   "name": "ReST API Documentation",
   "version": "1.0.0",
   "description": "Base framework for creating ReST API's using Node, Express and MongoDB.",
-  "title": "App - title",
+  "title": "App - Title",
   "url" : "http://localhost:8080/api/v1.0"
 }

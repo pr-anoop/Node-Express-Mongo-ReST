@@ -1,3 +1,5 @@
+var security = require('../middleware/security')();
+
 var userContoller = function(User) {
 	/**
 	 * @api {get} /users List all users
@@ -13,18 +15,20 @@ var userContoller = function(User) {
 	 *       "email": "john.doe@example.com"
 	 *       "verified": false
 	 *     },{"_id": 1234567890,
-	 *       "firstname": "John",
+	 *       "firstname": "Joseph",
 	 *       "lastname": "Doe",
-	 *       "email": "john.doe@example.com"
-	 *       "verified": false
+	 *       "email": "joseph.doe@example.com"
+	 *       "verified": true
 	 *     }]
 	*/
 	var listUsers = function(req, res) {
-		User.find({}, function(err,users){
+		User.find()
+		.exec(function(err,users){
             if(err)
                 res.status(500).send(err);
             else
-                res.json(users);
+            	res.json(users);
+                
         });
 	}
 
@@ -53,8 +57,11 @@ var userContoller = function(User) {
 	*/
 	var createUser = function(req, res) {
 		var user = new User(req.body);
-        user.save();
-        res.status(201).send(user);
+		security.encode(req.body.password).then(function(hash) {
+    		user.password = hash;
+    		user.save();
+        	res.status(201).send(user);
+    	}); 
 	}
 
 	/**
@@ -108,7 +115,6 @@ var userContoller = function(User) {
 		req.user.firstname = req.body.firstname;
         req.user.lastname = req.body.lastname;
         req.user.email = req.body.email;
-        req.user.password = req.body.password;
         req.user.verified = req.body.verified;
         req.user.save(function(err){
             if(err)
@@ -145,6 +151,9 @@ var userContoller = function(User) {
 		if(req.body._id)
             delete req.body._id;
 
+ 		if(req.body.password)
+ 			delete req.body.password;
+
         for(var p in req.body) {
             req.user[p] = req.body[p];
         }
@@ -175,9 +184,10 @@ var userContoller = function(User) {
 	    });
 	}
 
-
-	var middleware = function(req, res, next) {
-		User.findById(req.params.id, function(err,user){
+	// Middleware to get the user information from unique ID
+	var userById = function(req, res, next) {
+		User.findById(req.params.id)
+		.exec(function(err,user){
             if(err)
                 res.status(500).send(err);
             else if(user) {
@@ -196,7 +206,7 @@ var userContoller = function(User) {
 		update: updateUser,
 		patch: patch,
 		remove: remove,
-		middleware: middleware
+		userById: userById
 	}
 }
 
