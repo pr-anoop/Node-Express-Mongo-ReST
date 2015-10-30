@@ -1,12 +1,14 @@
+'use strict';
+
 var express = require('express');
 
-var routes = function(){
+var routes = function( ) {
     var authorRouter = express.Router();
 
-    authorRouter.route('/')
-    	.get(function(req, res) {
-    		res.status(200).send("Author Route");
-    	});
+ authorRouter.route('/')
+        .get(function (req, res) {
+            res.status(200).send("Author Route");
+        });
     return authorRouter;
 }
 

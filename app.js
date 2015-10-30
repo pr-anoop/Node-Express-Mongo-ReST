@@ -47,9 +47,8 @@ for (var key in files) {
 
 app.get('*', function(req, res){
 	res.send({
-		version: nconf.get('version'),
-	    ip: req.ip,
-	    time: new Date()
+	    app: nconf.get('name'),
+		version: nconf.get('version')
 	});
 });
 

@@ -1,8 +1,9 @@
 var gulp = require('gulp')
 	nodemon = require('gulp-nodemon'),
-	apidoc = require('gulp-apidoc');
+	apidoc = require('gulp-apidoc'),
+    jslint = require('gulp-jslint');
 
-gulp.task('default', function(){
+gulp.task('server', function(){
     nodemon({
         script: 'app.js',
         ext: 'js',
@@ -18,4 +19,18 @@ gulp.task('docs', function(){
 		src: "controllers/",
 		dest: "docs/"
 	});
+});
+
+gulp.task('jslint', function () {
+    return gulp.src(['routes/*.js', 'controllers/*.js'])
+        .pipe(jslint({
+            node: true,
+            evil: true,
+            nomen: true,
+            reporter: 'default',
+            errorsOnly: false
+        }))
+        .on('error', function (error) {
+            console.error(String(error));
+        });
 });

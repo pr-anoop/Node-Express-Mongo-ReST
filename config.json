@@ -1,4 +1,5 @@
 {
+	"name" : "Experion official API's",
 	"version": "v1.0",
 	"port": 8080,
 	"mongodb": {
